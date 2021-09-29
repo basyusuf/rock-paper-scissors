@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avalanche Bitcoin Ethereum</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+        integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+        integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background-color: #303F52;
+        }
+
+        .scoreDiv {
+            height: 4%;
+            text-align: right;
+            margin-right: 20px;
+            padding-top: 1%;
+
+        }
+
+        img {
+            margin-right: 16px;
+            margin-left: 16px;
+            height: 64px;
+            width: 64px;
+        }
+
+        .scoreDiv a {
+            width: 40px;
+            text-align: center;
+
+        }
+
+        .mainDiv {
+            height: 95%;
+        }
+
+        .bottomDiv {
+            padding-top: 30px;
+        }
+
+        .resultDiv {
+            padding-top: 75px;
+            padding-bottom: 75px;
+            text-align: center;
+        }
+
+        .choiceImg {
+            cursor: pointer;
+        }
+
+        #operation {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+        }
+
+        table {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .customDivider {
+            padding-bottom: 20px;
+        }
+
+        tr th {
+            color: white;
+        }
+    </style>
+    <script>
+        //avax tas
+        //kağıt btc
+        //makas eth
+        let compare_data = {
+            avax: {
+                eth: "strong",
+                btc: "week",
+                avax: "deal"
+            },
+            btc: {
+                eth: "week",
+                avax: "strong",
+                btc: "deal"
+            },
+            eth: {
+                avax: "week",
+                btc: "strong",
+                eth: "deal"
+            }
+        }
+        let computer_answer = "question";
+        let user_answer = "question";
+        let score = 0;
+        $(document).ready(function () {
+            console.log("ready!");
+            $(".choiceImg").click(function (event) {
+                user_answer = event.currentTarget.dataset.name;
+                let items = Object.keys(compare_data);
+                computer_answer = items[Math.floor(Math.random() * items.length)];
+                console.info("User answer is ", user_answer, " and computer answer is ", computer_answer);
+                let result = compare_data[user_answer][computer_answer];
+                $("#userAnswer").attr("src", `./images/${user_answer}.png`);
+                $("#botAnswer").attr("src", `./images/${computer_answer}.png`);
+                console.info("Result:", result);
+                if (result == "week") {
+                    score -= 10;
+                    $("#operation").text("<");
+                } else if (result == "strong") {
+                    score += 10;
+                    $("#operation").text(">");
+                } else {
+                    $("#operation").text("=");
+                }
+                refreshScore();
+            });
+            $("#resetScore").click(function (event) {
+                score = 0;
+                $("#userAnswer").attr("src", `./images/question.png`);
+                $("#botAnswer").attr("src", `./images/question.png`);
+                $("#operation").text("?");
+
+                refreshScore();
+            });
+
+        });
+        function refreshScore() {
+            let scoreElement = $("#gameScoreParent");
+            $("#gameScore").text(score);
+            if (score == 0) {
+                scoreElement.removeClass().addClass("ui grey label")
+            } else if (score > 0) {
+                scoreElement.removeClass().addClass("ui green label")
+            } else {
+                scoreElement.removeClass().addClass("ui red label")
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="scoreDiv">
+        <a id="gameScoreParent" class="ui grey label">
+            <span id="gameScore">0</span>
+        </a>
+    </div>
+    <div class="ui middle aligned center aligned grid mainDiv">
+        <div class="column">
+            <div class="resultDiv">
+                <div class="ui horizontal divider customDivider">
+                    Result
+                </div>
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Your answer</th>
+                                <th>Operation</th>
+                                <th>Bot answer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <img id="userAnswer" src="images/question.png">
+                                </td>
+                                <td>
+                                    <span id="operation">
+                                        ?
+                                    </span>
+                                </td>
+                                <td>
+                                    <img id="botAnswer" src="images/question.png">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                </div>
+            </div>
+            <div>
+                <img data-name="avax" class="choiceImg" src="images/avax.png">
+                <img data-name="eth" class="choiceImg" src="images/eth.png">
+                <img data-name="btc" class="choiceImg" src="images/btc.png">
+            </div>
+            <div class="bottomDiv">
+                <button id="resetScore" class="ui button">
+                    Reset Game
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
